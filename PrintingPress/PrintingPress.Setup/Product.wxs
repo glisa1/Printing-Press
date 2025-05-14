@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+	<Product Id="*" Name="PrintingPress" Language="1033" Version="1.0.0.0"
+			 Manufacturer="Danijel Glisovic" UpgradeCode="5d3cb74c-6df7-4e15-a725-b41e5b35c8b7">
+		<Package InstallerVersion="500" Compressed="yes" InstallScope="perUser" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version is already installed." />
+		<MediaTemplate />
+
+		<Feature Id="ProductFeature" Title="PrintingPress Feature" Level="1">
+			<ComponentGroupRef Id="AppComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="LocalAppDataFolder">
+				<Directory Id="INSTALLFOLDER" Name="PrintingPress" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="AppComponents" Directory="INSTALLFOLDER">
+
+			<Component Id="PrintingPressExe" Guid="83b45633-1943-483f-a79f-1d06dc6ad412">
+				<File Id="PrintingPressExe"
+					  Source="C:\Repo\Printing-Press\PrintingPress\PrintingPress\bin\Release\net9.0-windows\publish\PrintingPress.exe"
+					  KeyPath="no" />
+				<RegistryValue Root="HKCU"
+							   Key="Software\Microsoft\Windows\CurrentVersion\Run"
+							   Name="PrintingPress"
+							   Type="string"
+							   Value="[#PrintingPressExe]" />
+			</Component>
+
+			<Component Id="PrintingPressExe_KeyPath" Guid="b1e4b3b6-b89b-4f5f-96e7-13c44149f3d2">
+				<RegistryValue Root="HKCU"
+							   Key="Software\DGlis\PrintingPress"
+							   Name="PrintingPressExeInstalled"
+							   Type="integer"
+							   Value="1"
+							   KeyPath="yes" />
+			</Component>
+
+			<Component Id="CleanupComponent" Guid="e0f642aa-90b7-4eb0-a876-156e9322c5ea">
+				<RegistryValue Root="HKCU"
+							   Key="Software\DGlis\PrintingPress"
+							   Name="Installed"
+							   Type="integer"
+							   Value="1"
+							   KeyPath="yes" />
+				<RemoveFolder Id="CleanupInstallDir" Directory="INSTALLFOLDER" On="uninstall" />
+			</Component>
+
+			<Component Id="PrintingPressDll" Guid="2bde7644-fa76-4e22-b490-3887450053c7">
+				<File Source="C:\Repo\Printing-Press\PrintingPress\PrintingPress\bin\Release\net9.0-windows\publish\PrintingPress.dll" />
+				<RegistryValue Root="HKCU"
+							   Key="Software\DGlis\PrintingPress"
+							   Name="PrintingPressDllInstalled"
+							   Type="integer"
+							   Value="1"
+							   KeyPath="yes" />
+			</Component>
+
+			<Component Id="DepsJson" Guid="7480678a-1dca-45b1-ad4d-c6719e837d7e">
+				<File Source="C:\Repo\Printing-Press\PrintingPress\PrintingPress\bin\Release\net9.0-windows\publish\PrintingPress.deps.json" />
+				<RegistryValue Root="HKCU"
+							   Key="Software\DGlis\PrintingPress"
+							   Name="DepsJsonInstalled"
+							   Type="integer"
+							   Value="1"
+							   KeyPath="yes" />
+			</Component>
+
+			<Component Id="RuntimeConfig" Guid="25cfe7c2-6145-4b4e-b70f-71005ae456d5">
+				<File Source="C:\Repo\Printing-Press\PrintingPress\PrintingPress\bin\Release\net9.0-windows\publish\PrintingPress.runtimeconfig.json" />
+				<RegistryValue Root="HKCU"
+							   Key="Software\DGlis\PrintingPress"
+							   Name="RuntimeConfigInstalled"
+							   Type="integer"
+							   Value="1"
+							   KeyPath="yes" />
+			</Component>
+
+			<Component Id="ServiceDll" Guid="535b7dec-b02f-45c0-b8c6-bb60b1ca05dc">
+				<File Source="C:\Repo\Printing-Press\PrintingPress\PrintingPress\bin\Release\net9.0-windows\publish\PrintingPress.Service.dll" />
+				<RegistryValue Root="HKCU"
+							   Key="Software\DGlis\PrintingPress"
+							   Name="ServiceDllInstalled"
+							   Type="integer"
+							   Value="1"
+							   KeyPath="yes" />
+			</Component>
+
+			<Component Id="SharpClipboard" Guid="6ee8b5e7-eae1-4a7d-a1dc-535806ff27b7">
+				<File Source="C:\Repo\Printing-Press\PrintingPress\PrintingPress\bin\Release\net9.0-windows\publish\SharpClipboard.dll" />
+				<RegistryValue Root="HKCU"
+							   Key="Software\DGlis\PrintingPress"
+							   Name="SharpClipboardInstalled"
+							   Type="integer"
+							   Value="1"
+							   KeyPath="yes" />
+			</Component>
+
+		</ComponentGroup>
+	</Fragment>
+
+	<Fragment>
+		<CustomAction Id="LaunchApp"
+					  FileKey="PrintingPressExe"
+					  ExeCommand=""
+					  Return="asyncNoWait"
+					  Impersonate="yes" />
+
+		<InstallExecuteSequence>
+			<Custom Action="LaunchApp" After="InstallFinalize">NOT Installed</Custom>
+		</InstallExecuteSequence>
+	</Fragment>
+
+</Wix>
